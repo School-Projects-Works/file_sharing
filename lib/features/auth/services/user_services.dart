@@ -109,4 +109,18 @@ class AuthServices {
       return '';
     }
   }
+
+  static Future<bool> resetPassword(String s) async{
+    try {
+      await _auth.sendPasswordResetEmail(email: s);
+      return true;
+    } on FirebaseAuthException catch (e) {
+      if (kDebugMode) {
+        print(e.message);
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
 }

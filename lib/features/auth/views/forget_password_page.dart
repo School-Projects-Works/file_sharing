@@ -3,22 +3,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/functions/email_validation.dart';
 import '../../../core/views/custom_button.dart';
+import '../../../core/views/custom_dialog.dart';
 import '../../../core/views/custom_input.dart';
 import '../../../generated/assets.dart';
 import '../../../router/router.dart';
 import '../../../router/router_items.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/styles.dart';
+import '../services/user_services.dart';
 
 class ForgetPasswordPage extends ConsumerStatefulWidget {
   const ForgetPasswordPage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ForgetPasswordPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ForgetPasswordPageState();
 }
 
 class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
-final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     var style = Styles(context);
@@ -71,6 +74,7 @@ final _formKey = GlobalKey<FormState>();
     );
   }
 
+  String? _email;
   Widget _buildForm() {
     var style = Styles(context);
     return Padding(
@@ -90,8 +94,11 @@ final _formKey = GlobalKey<FormState>();
                 style: style.title(
                     fontWeight: FontWeight.bold,
                     color: primaryColor,
-                    fontSize: style.isDesktop?35:style.isTablet?30: 20
-                    )),
+                    fontSize: style.isDesktop
+                        ? 35
+                        : style.isTablet
+                            ? 30
+                            : 20)),
             const Divider(
               height: 22,
               thickness: 3,
@@ -101,6 +108,11 @@ final _formKey = GlobalKey<FormState>();
               label: 'Email',
               prefixIcon: Icons.email,
               hintText: 'Enter your email',
+              onSaved: (value) {
+                setState(() {
+                  _email = value;
+                });
+              },
               validator: (value) {
                 if (value == null || value.isEmpty || !isValid(value)) {
                   return 'Please enter your email';
@@ -108,12 +120,13 @@ final _formKey = GlobalKey<FormState>();
                 return null;
               },
             ),
-            const SizedBox(height: 22),              
+            const SizedBox(height: 22),
             CustomButton(
                 text: 'Reset Password',
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
+                    _resetPassword();
                   }
                 }),
             const SizedBox(height: 22),
@@ -137,5 +150,21 @@ final _formKey = GlobalKey<FormState>();
         ),
       ),
     );
+  }
+
+  void _resetPassword() async {
+    CustomDialogs.loading(message: 'Resetting password...');
+    var result = await AuthServices.resetPassword(_email!);
+    CustomDialogs.dismiss();
+    if (result) {
+      CustomDialogs.toast(
+          message: 'Password reset link has been sent to your email',
+          type: DialogType.success);
+      MyRouter(context: context, ref: ref)
+          .navigateToRoute(RouterItem.loginRoute);
+    } else {
+      CustomDialogs.toast(
+          message: 'Failed to reset password', type: DialogType.error);
+    }
   }
 }

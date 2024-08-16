@@ -162,9 +162,13 @@ class LoginProvider extends StateNotifier<LoginModel> {
           CustomDialogs.dismiss();
           CustomDialogs.toast(message: message, type: DialogType.success);
           ref.read(userProvider.notifier).setUser(userModel);
-
-          MyRouter(context: context, ref: ref)
-              .navigateToRoute(RouterItem.dashboardRoute);
+          if (userModel.role == 'admin') {
+            MyRouter(context: context, ref: ref)
+                .navigateToRoute(RouterItem.dashboardRoute);
+          } else {
+            MyRouter(context: context, ref: ref)
+                .navigateToRoute(RouterItem.filesRoute);
+          }
         } else {
           CustomDialogs.dismiss();
           CustomDialogs.showDialog(
