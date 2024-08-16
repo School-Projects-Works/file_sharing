@@ -145,7 +145,10 @@ class _FileDetailsPageState extends ConsumerState<FileDetailsPage> {
                                     size: 18,
                                   ),
                                   const SizedBox(width: 5),
-                                  Text(creator.email, style: style.subtitle()),
+                                  Expanded(
+                                    child: Text(creator.email,
+                                        maxLines: 1, style: style.subtitle()),
+                                  ),
                                 ],
                               ),
                               Row(
@@ -155,7 +158,12 @@ class _FileDetailsPageState extends ConsumerState<FileDetailsPage> {
                                     size: 18,
                                   ),
                                   const SizedBox(width: 5),
-                                  Text(creator.phone, style: style.subtitle()),
+                                  Expanded(
+                                    child: Text(creator.phone,
+                                    maxLines: 1,
+                                    
+                                        style: style.subtitle()),
+                                  ),
                                 ],
                               ),
                             ],
@@ -306,8 +314,6 @@ class _FileDetailsPageState extends ConsumerState<FileDetailsPage> {
                         ),
                     ],
                   ),
-
-                 
                 ],
               ),
             ),

@@ -136,6 +136,7 @@ class _FilesPageState extends ConsumerState<FilesPage> {
                 DataColumn2(
                   label: Text('Action'.toUpperCase()),
                   size: ColumnSize.L,
+                  fixedWidth: styles.isMobile ? null : 250,
                 ),
               ],
               rows: List<DataRow>.generate(files.length, (index) {
@@ -163,7 +164,7 @@ class _FilesPageState extends ConsumerState<FilesPage> {
                               icon: const Icon(Icons.remove_red_eye)),
                           //upload
                           Padding(
-                            padding: const EdgeInsets.all(5.0),
+                            padding: const EdgeInsets.all(2.0),
                             child: IconButton(
                               icon: const Icon(Icons.upload),
                               onPressed: () {
@@ -182,7 +183,7 @@ class _FilesPageState extends ConsumerState<FilesPage> {
                           //edit
 
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(2.0),
                             child: IconButton(
                                 onPressed: () {
                                   ref.read(iShareFile.notifier).state = file;
@@ -191,7 +192,7 @@ class _FilesPageState extends ConsumerState<FilesPage> {
                           ),
                           if (file.creatorId == user.id)
                             Padding(
-                              padding: const EdgeInsets.all(5.0),
+                              padding: const EdgeInsets.all(2.0),
                               child: IconButton(
                                 icon: const Icon(Icons.edit),
                                 onPressed: () {
