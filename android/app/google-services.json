@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1026876188452",
+    "project_id": "file-sharing-3e932",
+    "storage_bucket": "file-sharing-3e932.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026876188452:android:812ce8d6485446128cf5b1",
+        "android_client_info": {
+          "package_name": "com.example.file_sharing"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoHH-K4SfHEQXPhU2Gdj0Gt6F2fok49cY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
