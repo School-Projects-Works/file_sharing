@@ -1,3 +1,4 @@
+import 'package:file_sharing/core/views/custom_dialog.dart';
 import 'package:file_sharing/features/auth/provider/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/file_model.dart';
@@ -11,8 +12,10 @@ final fileStreamProvider =
     if (user.role == 'admin') {
       ref.read(filesProvider.notifier).setItems(item);
     } else {
-      var list = item.where((item) =>
-          item.usersIds.contains(user.id) || item.creatorId == user.id).toList();
+      var list = item
+          .where((item) =>
+              item.usersIds.contains(user.id) || item.creatorId == user.id)
+          .toList();
       ref.read(filesProvider.notifier).setItems(list);
     }
     yield item;
@@ -58,5 +61,17 @@ class FileProvider extends StateNotifier<FileFilter> {
     }
   }
 
-  void delete(FileModel file, WidgetRef ref) {}
+  void delete(FileModel file, WidgetRef ref) async {
+    CustomDialogs.dismiss();
+    CustomDialogs.loading(message: 'Deleting file...');
+    var result = await FileServices.deleteFile(file.id);
+    CustomDialogs.dismiss();
+    if (result) {
+      CustomDialogs.showDialog(
+          message: 'File deleted successfully', type: DialogType.success);
+    } else {
+      CustomDialogs.showDialog(
+          message: 'Failed to delete file', type: DialogType.error);
+    }
+  }
 }

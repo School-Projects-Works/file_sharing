@@ -52,5 +52,14 @@ class FileServices{
     return fileCollection.doc().id;
   }
 
+  static Future<bool> deleteFile(String id) async{
+    try {
+      await fileCollection.doc(id).delete();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
     
 }
