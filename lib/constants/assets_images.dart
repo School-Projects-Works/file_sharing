@@ -28,11 +28,19 @@ class AssetImages {
   /// images/logo_white
   static AssetImage get imagesLogoWhite => AssetImage(Assets.imagesLogoWhite);
 
+  /// Assets for imagesMemoLogo
+  /// images/memo_logo
+  static AssetImage get imagesMemoLogo => AssetImage(Assets.imagesMemoLogo);
+
+  /// Assets for imagesMemoLogoT
+  /// images/memo_logo_t
+  static AssetImage get imagesMemoLogoT => AssetImage(Assets.imagesMemoLogoT);
+
+  /// Assets for imagesMemoWhite
+  /// images/memo_white
+  static AssetImage get imagesMemoWhite => AssetImage(Assets.imagesMemoWhite);
+
   /// Assets for imagesProfile
   /// images/profile
   static AssetImage get imagesProfile => AssetImage(Assets.imagesProfile);
-
-  /// Assets for imagesSplash
-  /// images/splash
-  static AssetImage get imagesSplash => AssetImage(Assets.imagesSplash);
 }

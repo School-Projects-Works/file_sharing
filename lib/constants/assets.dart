@@ -25,11 +25,19 @@ class Assets {
   /// images/logo_white
   static const String imagesLogoWhite = "assets/images/logo_white.png";
 
+  /// Assets for imagesMemoLogo
+  /// images/memo_logo
+  static const String imagesMemoLogo = "assets/images/memo_logo.png";
+
+  /// Assets for imagesMemoLogoT
+  /// images/memo_logo_t
+  static const String imagesMemoLogoT = "assets/images/memo_logo_t.png";
+
+  /// Assets for imagesMemoWhite
+  /// images/memo_white
+  static const String imagesMemoWhite = "assets/images/memo_white.png";
+
   /// Assets for imagesProfile
   /// images/profile
   static const String imagesProfile = "assets/images/profile.png";
-
-  /// Assets for imagesSplash
-  /// images/splash
-  static const String imagesSplash = "assets/images/splash.png";
 }

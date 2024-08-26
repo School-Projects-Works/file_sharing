@@ -10,7 +10,7 @@ static const String baseUrl =
     try {
       final response = await http.get(Uri.parse(baseUrl
           .replaceFirst('PhoneNumber', phoneNumber)
-          .replaceFirst('SenderID', 'FileNet')
+          .replaceFirst('SenderID', 'Memo')
           .replaceFirst('YourMessage', message)));
       if (response.statusCode == 200) {
         return true;
