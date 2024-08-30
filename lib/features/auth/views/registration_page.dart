@@ -134,7 +134,7 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
               CustomTextFields(
                 label: 'Phone number',
                 prefixIcon: Icons.phone,
-                isPhoneInput: true,
+                isDigitOnly: true,
                 validator: (phone) {
                   if (phone == null) {
                     return 'Phone number is required';
