@@ -40,8 +40,11 @@ class FileServices{
 
   static Future<String> uploadFile(Uint8List data, String id) async {
     try {
-      var ref = storage.ref().child('files/$id'); 
-      await ref.putData(data);
+      id = id.isEmpty ? getId() : id;
+      var metadata=SettableMetadata(
+          contentType: 'file/pdf',);  
+      var ref = storage.ref().child('files/$id.pdf'); 
+      await ref.putData(data, metadata);
       return await ref.getDownloadURL();
     } catch (e) {
       return '';

@@ -1,6 +1,9 @@
 import 'package:file_sharing/core/views/custom_button.dart';
+import 'package:file_sharing/features/auth/provider/user_provider.dart';
 import 'package:file_sharing/features/dashboard/pages/files/data/upload_model.dart';
+import 'package:file_sharing/features/files/data/file_model.dart';
 import 'package:file_sharing/features/files/provider/file_provider.dart';
+import 'package:file_sharing/features/files/services/file_services.dart';
 import 'package:file_sharing/features/users/data/user_model.dart';
 import 'package:file_sharing/router/router.dart';
 import 'package:file_sharing/router/router_items.dart';
@@ -14,7 +17,6 @@ import '../../core/functions/int_to_date.dart';
 class FileDetailsPage extends ConsumerStatefulWidget {
   const FileDetailsPage({super.key, required this.fileId});
   final String fileId;
-
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _FileDetailsPageState();
@@ -160,9 +162,7 @@ class _FileDetailsPageState extends ConsumerState<FileDetailsPage> {
                                   const SizedBox(width: 5),
                                   Expanded(
                                     child: Text(creator.phone,
-                                    maxLines: 1,
-                                    
-                                        style: style.subtitle()),
+                                        maxLines: 1, style: style.subtitle()),
                                   ),
                                 ],
                               ),
@@ -206,7 +206,6 @@ class _FileDetailsPageState extends ConsumerState<FileDetailsPage> {
                           padding: const EdgeInsets.all(10.0),
                           child: SizedBox(
                             width: 300,
-                            height: 220,
                             child: Column(
                               children: [
                                 InkWell(
@@ -255,6 +254,7 @@ class _FileDetailsPageState extends ConsumerState<FileDetailsPage> {
                                         children: [
                                           Text('Uploaded By:',
                                               style: style.body(
+                                                  fontSize: 12,
                                                   color: Colors.white)),
                                           const SizedBox(width: 5),
                                           Expanded(
@@ -262,7 +262,9 @@ class _FileDetailsPageState extends ConsumerState<FileDetailsPage> {
                                                 getUser(users,
                                                         uploads[i].uploadBy)!
                                                     .name,
+                                                maxLines: 1,
                                                 style: style.body(
+                                                    fontSize: 13,
                                                     color: Colors.black)),
                                           ),
                                         ],
@@ -272,38 +274,70 @@ class _FileDetailsPageState extends ConsumerState<FileDetailsPage> {
                                         children: [
                                           Text('Uploaded At:',
                                               style: style.body(
+                                                  fontSize: 12,
                                                   color: Colors.white)),
                                           const SizedBox(width: 5),
                                           Expanded(
                                             child: Text(
                                                 intToDate(uploads[i].createdAt,
                                                     withTime: true),
+                                                maxLines: 1,
                                                 style: style.body(
+                                                    fontSize: 13,
                                                     color: Colors.black)),
                                           ),
                                         ],
                                       ),
                                       //add download button
-                                      const SizedBox(height: 10),
+                                      const SizedBox(height: 2),
                                       if (ref.watch(selectedIndex) == i)
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: CustomButton(
-                                              color: secondaryColor,
+                                              color: primaryColor,
                                               radius: 10,
                                               text: 'Download',
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 2),
                                               onPressed: () async {
-                                                await _launchUrl(uploads[ref
-                                                        .watch(selectedIndex)]
-                                                    .fileUrl);
-                                                // await FileSaver.instance.saveFile(
-                                                //   link: LinkDetails(
-                                                //       link:
-                                                //           uploads[ref.watch(selectedIndex)].fileUrl,
-                                                //       ),
-                                                //   name: uploads[ref.watch(selectedIndex)].description.trim().replaceAll(' ', '_').toLowerCase(),
-                                                // );
+                                                await _launchUrl(
+                                                    uploads[ref.watch(
+                                                            selectedIndex)]
+                                                        .fileUrl,
+                                                    uploads[i],
+                                                    file);
                                               }),
+                                        ),
+                                      if (uploads[i].viewedBy.isNotEmpty)
+                                        ListTile(
+                                          title: Text('Viewed By:',
+                                              style: style.body(
+                                                  color: Colors.white)),
+                                          subtitle: Wrap(
+                                            children: uploads[i]
+                                                .viewedBy
+                                                .map((e) => SizedBox(
+                                                      width: double.infinity,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(5.0),
+                                                        child: file.users
+                                                            .where((element) =>
+                                                                element['id'] ==
+                                                                e)
+                                                            .map((e) => Text(
+                                                                e['name'],
+                                                                maxLines: 1,
+                                                                style: style
+                                                                    .body()))
+                                                            .firstOrNull,
+                                                      ),
+                                                    ))
+                                                .toList(),
+                                          ),
                                         ),
                                     ],
                                   ),
@@ -327,7 +361,24 @@ class _FileDetailsPageState extends ConsumerState<FileDetailsPage> {
     return users.where((element) => element.id == uploadBy).firstOrNull;
   }
 
-  Future<void> _launchUrl(String url) async {
+  Future<void> _launchUrl(String url, Upload upload, FileModel file) async {
+    var user = ref.watch(userProvider);
+    if (user.id != upload.uploadBy) {
+      //add user to the list of people who viewed the file
+      var existedViewedBy = upload.viewedBy.toList();
+      existedViewedBy.add(user.id);
+      upload.viewedBy = existedViewedBy;
+      var fileUploads = file.files.map((e) => Upload.fromMap(e)).toList();
+      var index = fileUploads.indexWhere((element) => element.id == upload.id);
+      fileUploads[index] = upload;
+      file.files = fileUploads.map((e) => e.toMap()).toList();
+
+      var res = await FileServices.updateFile(file);
+      if (!res) {
+        throw Exception('Could not update file');
+      }
+    }
+
     if (!await launchUrl(Uri.parse(url))) {
       throw Exception('Could not launch $url');
     } else {

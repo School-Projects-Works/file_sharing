@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 
 class FileModel {
@@ -7,6 +6,7 @@ class FileModel {
   String title;
   String description;
   String creatorId;
+  
   Map<String, dynamic> creator;
   List<String> usersIds;
   List<Map<String, dynamic>> users;

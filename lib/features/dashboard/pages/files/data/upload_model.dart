@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 
 class Upload {
   String description;
   String fileUrl;
   String folderId;
   String id;
+  List<String> viewedBy;
   String uploadBy;
   int createdAt;
   Upload({
@@ -12,6 +14,7 @@ class Upload {
     required this.fileUrl,
     required this.folderId,
     required this.id,
+     this.viewedBy=const [],
     required this.uploadBy,
     required this.createdAt,
   });
@@ -21,6 +24,7 @@ class Upload {
     String? fileUrl,
     String? folderId,
     String? id,
+    List<String>? viewedBy,
     String? uploadBy,
     int? createdAt,
   }) {
@@ -29,6 +33,7 @@ class Upload {
       fileUrl: fileUrl ?? this.fileUrl,
       folderId: folderId ?? this.folderId,
       id: id ?? this.id,
+      viewedBy: viewedBy ?? this.viewedBy,
       uploadBy: uploadBy ?? this.uploadBy,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -41,6 +46,7 @@ class Upload {
     result.addAll({'fileUrl': fileUrl});
     result.addAll({'folderId': folderId});
     result.addAll({'id': id});
+    result.addAll({'viewedBy': viewedBy});
     result.addAll({'uploadBy': uploadBy});
     result.addAll({'createdAt': createdAt});
   
@@ -53,6 +59,7 @@ class Upload {
       fileUrl: map['fileUrl'] ?? '',
       folderId: map['folderId'] ?? '',
       id: map['id'] ?? '',
+      viewedBy: List<String>.from(map['viewedBy']),
       uploadBy: map['uploadBy'] ?? '',
       createdAt: map['createdAt']?.toInt() ?? 0,
     );
@@ -64,7 +71,7 @@ class Upload {
 
   @override
   String toString() {
-    return 'Upload(description: $description, fileUrl: $fileUrl, folderId: $folderId, id: $id, uploadBy: $uploadBy, createdAt: $createdAt)';
+    return 'Upload(description: $description, fileUrl: $fileUrl, folderId: $folderId, id: $id, viewedBy: $viewedBy, uploadBy: $uploadBy, createdAt: $createdAt)';
   }
 
   @override
@@ -76,6 +83,7 @@ class Upload {
       other.fileUrl == fileUrl &&
       other.folderId == folderId &&
       other.id == id &&
+      listEquals(other.viewedBy, viewedBy) &&
       other.uploadBy == uploadBy &&
       other.createdAt == createdAt;
   }
@@ -86,6 +94,7 @@ class Upload {
       fileUrl.hashCode ^
       folderId.hashCode ^
       id.hashCode ^
+      viewedBy.hashCode ^
       uploadBy.hashCode ^
       createdAt.hashCode;
   }
@@ -97,6 +106,7 @@ class Upload {
       fileUrl: '',
       id: '',
       uploadBy: '',
+      viewedBy: [],
       createdAt: 0,
     );
   }
